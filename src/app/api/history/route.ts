@@ -1,83 +1,33 @@
-"use client";
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
-import { useEffect, useState } from "react";
+// ✅ GET history from DB
+export async function GET() {
+  const history = await prisma.history.findMany({
+    orderBy: { createdAt: "desc" },
+  });
 
-export type HistoryItem = {
-  id: string;
-  code: string;
-  explanation: string;
-  mode: string;
-  createdAt: string;
-};
+  return NextResponse.json(history);
+}
 
-export function useHistory() {
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [loading, setLoading] = useState(true);
+// ✅ ADD to DB
+export async function POST(req: Request) {
+  const body = await req.json();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch("/api/history");
-        if (!res.ok) throw new Error("Failed to fetch history");
+  const newItem = await prisma.history.create({
+    data: {
+      userId: "temp-user", // ⚠️ temporary (we fix later)
+      code: body.code,
+      explanation: body.explanation,
+      mode: body.mode,
+    },
+  });
 
-        const data = await res.json();
-        setHistory(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  return NextResponse.json(newItem);
+}
 
-  const addToHistory = async (item: {
-    code: string;
-    explanation: string;
-    mode: string;
-  }) => {
-    try {
-      const res = await fetch("/api/history", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(item),
-      });
-
-      // ✅ handle failed responses FIRST
-      if (!res.ok) {
-        const text = await res.text(); // safer than json
-        console.error("API error:", res.status, text);
-        return;
-      }
-
-      // ✅ only parse if valid
-      const newItem = await res.json();
-
-      setHistory((prev) => [newItem, ...prev]);
-    } catch (err) {
-      console.error("Add history failed:", err);
-    }
-  };
-
-  const clearHistory = async () => {
-    try {
-      const res = await fetch("/api/history", {
-        method: "DELETE",
-      });
-
-      if (!res.ok) throw new Error("Delete failed");
-
-      setHistory([]);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  return {
-    history,
-    addToHistory,
-    clearHistory,
-    loading,
-  };
+// ✅ DELETE from DB
+export async function DELETE() {
+  await prisma.history.deleteMany();
+  return NextResponse.json({ success: true });
 }

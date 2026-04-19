@@ -2,6 +2,17 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { error } from "console";
+
+type ClerkUserCreatedEvent = {
+  type: "user.created";
+  data: {
+    id: string;
+    email_addresses: {
+      email_address: string;
+    }[];
+  };
+};
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -18,7 +29,7 @@ export async function POST(req: Request) {
 
   const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET!);
 
-  let event: any;
+  let event: unknown;
 
   try {
     event = wh.verify(body, {
@@ -30,16 +41,25 @@ export async function POST(req: Request) {
     return new NextResponse("Invalid signature", { status: 400 });
   }
 
-  // 👤 USER CREATED EVENT
-  if (event.type === "user.created") {
-    const { id, email_addresses } = event.data;
+  // ✅ Type guard
+  if (
+    typeof event === "object" &&
+    event !== null &&
+    "type" in event &&
+    "data" in event
+  ) {
+    const e = event as ClerkUserCreatedEvent;
 
-    await prisma.user.create({
-      data: {
-        clerkId: id,
-        email: email_addresses[0].email_address,
-      },
-    });
+    if (e.type === "user.created") {
+      const { id, email_addresses } = e.data;
+
+      await prisma.user.create({
+        data: {
+          clerkId: id,
+          email: email_addresses?.[0]?.email_address || "",
+        },
+      });
+    }
   }
 
   return NextResponse.json({ success: true });

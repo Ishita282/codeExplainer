@@ -13,15 +13,20 @@ export async function POST(req: Request) {
       );
     }
 
+    // ✅ Ensure user exists (using clerkId, not id)
     await prisma.user.upsert({
-      where: { id: "demo-user" },
+      where: { clerkId: "demo-user" },
       update: {},
-      create: { id: "demo-user" },
+      create: {
+        clerkId: "demo-user",
+        email: "demo@example.com",
+      },
     });
 
+    // ✅ Create history entry
     const entry = await prisma.history.create({
       data: {
-        userId: "demo-user",
+        userId: "demo-user", // matches clerkId relation
         code,
         explanation,
         mode,
@@ -32,7 +37,6 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("POST ERROR:", error);
 
-    // ✅ ALWAYS return JSON
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
