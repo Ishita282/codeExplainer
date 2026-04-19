@@ -175,10 +175,3 @@ git push origin feature-name
 * OpenAI API (for code explanations)
 * Clerk (authentication)
 * Prisma (ORM)
-
----
-
-If you want, I can next:
-
-* make this **top 1% GitHub README (with badges, GIFs, demo link)**
-* or rewrite it to be **perfect for resume + recruiters**
