@@ -1,8 +1,19 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
   try {
+    const { userId } = await auth();
+
+    // 🔐 Protect route
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
     const { code, explanation, mode } = body;
 
@@ -13,20 +24,20 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Ensure user exists (using clerkId, not id)
+    // ✅ Ensure user exists in DB
     await prisma.user.upsert({
-      where: { clerkId: "demo-user" },
+      where: { clerkId: userId },
       update: {},
       create: {
-        clerkId: "demo-user",
-        email: "demo@example.com",
+        clerkId: userId,
+        email: "", // optional for now
       },
     });
 
-    // ✅ Create history entry
+    // ✅ Save history linked to user
     const entry = await prisma.history.create({
       data: {
-        userId: "demo-user", // matches clerkId relation
+        userId: userId, // 🔥 real user now
         code,
         explanation,
         mode,

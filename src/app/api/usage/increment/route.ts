@@ -1,16 +1,22 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
-const USER_ID = "demo-user";
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST() {
+  const { userId } = await auth();
+
+  // 🔐 Protect route
+  if (!userId) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+
   const updated = await prisma.usage.upsert({
-    where: { userId: USER_ID },
+    where: { userId }, // 🔥 real user
     update: {
       count: { increment: 1 },
     },
     create: {
-      userId: USER_ID,
+      userId,
       count: 1,
     },
   });
