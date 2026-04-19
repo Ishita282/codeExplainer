@@ -1,20 +1,18 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export default clerkMiddleware((_, req) => {
-  const publicRoutes = ["/", "/login", "/signup"];
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/login(.*)",
+  "/signup(.*)",
+]);
 
-  const isPublic = publicRoutes.some((route) =>
-    req.nextUrl.pathname.startsWith(route)
-  );
+export default clerkMiddleware(async (auth, req) => {
+  if (!isPublicRoute(req)) {
+    const { userId } = await auth();
 
-  if (isPublic) return;
-
-  // check Clerk session via headers (works in middleware runtime)
-  const authHeader = req.headers.get("authorization");
-
-  if (!authHeader) {
-    const url = new URL("/login", req.url);
-    return Response.redirect(url);
+    if (!userId) {
+      return Response.redirect(new URL("/login", req.url));
+    }
   }
 });
 
