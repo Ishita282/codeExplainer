@@ -1,36 +1,184 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Code Explainer
 
-## Getting Started
+A full-stack web application that helps developers understand code instantly by generating clear, human-readable explanations.
 
-First, run the development server:
+---
+
+## 📌 Overview
+
+**Code Explainer** allows users to paste or write code and receive structured explanations. It is designed to help:
+
+* Beginners understand complex code
+* Developers debug faster
+* Students learn concepts interactively
+
+---
+
+## ✨ Features
+
+* 🧠 AI-Powered Code Explanation
+* 💻 Interactive Code Editor
+* 📜 History Tracking
+* 🔐 Authentication (Login / Signup)
+* 📊 Usage Tracking / Limits
+* ⚡ Fast and responsive UI
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* Next.js (App Router)
+* React
+* Tailwind CSS
+
+### Backend
+
+* Node.js
+* Next.js API Routes
+
+### Database
+
+* PostgreSQL
+* Prisma ORM
+
+### Authentication
+
+* Clerk
+
+---
+
+## 📂 Project Structure
+
+```bash
+code-explainer/
+│
+├── app/
+│   ├── dashboard/
+│   ├── login/
+│   ├── signup/
+│   └── api/
+│
+├── components/
+│   ├── dashboard/
+│   └── ui/
+│
+├── prisma/
+│   └── schema.prisma
+│
+├── lib/
+│
+├── public/
+│
+└── README.md
+```
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/code-explainer.git
+cd code-explainer
+```
+
+---
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+---
+
+### 3. Setup environment variables
+
+Create a `.env` file:
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/code-explainer"
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_key
+CLERK_SECRET_KEY=your_secret
+```
+
+---
+
+### 4. Setup database
+
+```bash
+npx prisma db push
+```
+
+---
+
+### 5. Run the app
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App will run at:
+👉 [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧪 Usage
 
-## Learn More
+1. Login / Signup
+2. Open Dashboard
+3. Paste your code
+4. Click **Explain**
+5. View explanation instantly
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📸 Screenshots
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+*Add screenshots here (dashboard, editor, output panel)*
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔒 Future Improvements
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* 🌍 Multi-language support
+* 🧠 Improved AI explanations
+* 📂 Save & organize projects
+* 🤝 Share explanations
+* 📱 Mobile optimization
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+```bash
+# Fork the repo
+# Create a branch
+git checkout -b feature-name
+
+# Commit changes
+git commit -m "Add feature"
+
+# Push to GitHub
+git push origin feature-name
+```
+
+---
+
+## 🙌 Acknowledgements
+
+* OpenAI API (for code explanations)
+* Clerk (authentication)
+* Prisma (ORM)
+
+---
+
+If you want, I can next:
+
+* make this **top 1% GitHub README (with badges, GIFs, demo link)**
+* or rewrite it to be **perfect for resume + recruiters**
